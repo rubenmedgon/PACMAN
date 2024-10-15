@@ -1,0 +1,198 @@
+@startuml diagrama
+
+class MaquinaArcade{
+-Videojuego:juegos[*]
+-Controlador:controles[2]
+-Pantalla:pantalla
+}
+
+MaquinaArcade "1" *-- "1" Monitor
+Monitor <|-- Pantalla
+Monitor "1" o-- "1" MotorJuego
+class MotorJuego{
++GestionarAnimaciones()
++ReproducirAnimaciones()
+}
+
+MotorJuego "1" o-- "1" SistemaRenderizado
+class SistemaRenderizado{
++DibujarAnimaciones()
++ProcesarAnimaciones()
+}
+
+MotorJuego "1" o-- "1" Animator
+class Animator{
++AuxililarAnimaciones()
+}
+
+SistemaRenderizado "1" o-- "1" Animacion
+Animator "1" o-- "1" Animacion
+class Animacion{
+-Imagen:frames[*]
++AvanzarFrame()
+}
+
+Animacion "1" *-- "*" Imagen
+Imagen "1" *-- "*" EspectroElectromagnetico
+class Imagen{
+-EspectroElectromagnetico:colores[*]
+-Fotograma:fotogramas[60]
+}
+
+EspectroElectromagnetico<|-- Rojo
+EspectroElectromagnetico<|-- Rosa
+EspectroElectromagnetico<|-- Cian
+EspectroElectromagnetico<|-- Naranja
+EspectroElectromagnetico<|-- Amarillo
+Imagen "1" *-- "60" Fotograma
+Imagen <|-- ItemComestible
+ItemComestible <|-- Fruta
+ItemComestible <|-- ItemBonus
+Fruta <|-- Melon
+Fruta <|-- Cereza
+Fruta <|-- Manzana
+Fruta <|-- Fresa
+ItemBonus <|-- Campana
+ItemBonus <|-- LLave
+ItemBonus <|-- Pastilla
+ItemBonus <|-- Galaxian
+
+Fruta "1" *-- "1" Puntuacion
+class Fruta{
+-Puntuacion:puntuacion
+}
+
+Puntuacion "1" o-- "1" Numero
+class Numero{
++Sumar(numero)
++Restar(numero)
++Multiplicar(numero)
++Dividir(numero)
+}
+
+Numero "1" o-- "1" Numero
+class Puntuacion{
+-Numero:contador
++Incrementar(numero)
++Disminuir(numero)
+}
+
+MaquinaArcade "1" *-- "1" Videojuego
+Videojuego <|-- JuegoPacman
+class JuegoPacman{
+-NivelDificultad:niveles[*]
+-CodigoFuente:codigo
+}
+
+JuegoPacman "1" *-- "*" NivelDificultad
+JuegoPacman "1" *-- "1" CodigoFuente
+CodigoFuente "1" o-- "1" ControladorIA
+class ControladorIA{
++InterpretarComando(instruccion)
++EnviarComando(instruccion)
+}
+
+ControladorIA "1" o-- "4" PersonajeNoJugable
+class PersonajeNoJugable{
++CambiarDireccion(instruccion)
+}
+
+PersonajeNoJugable <|-- Fantasma
+CodigoFuente "1" o-- "1" GestorColisionable
+class GestorColisionable{
+-ObjetoColisionable:objetos[*]
++DetectarColisiones()
+}
+
+GestorColisionable "1" *-- "*" ObjetoColisionable
+ObjetoColisionable <|-- ItemComestible
+class ObjetoColisionable{
++Bool:DetectarColision(ObjetoColisionable)
+}
+
+MaquinaArcade "1" *-- "2" Controlador
+Controlador <|-- Joystick
+Controlador <|-- Boton
+
+Usuario "1" o-- "1" Controlador
+class Controlador{
++EnviarComando(señal)
+}
+
+Controlador "1" o-- "1" SistemaOperativo
+class SistemaOperativo{
++ProcesarComando(señal)
+}
+
+SistemaOperativo "1" o-- "1" Driver
+class Driver{
++InterpretarComando(señal)
+}
+
+Driver "1" o-- "1" PiezaHardware
+class PiezaHardware{
++EjecutarComando(señal)
+}
+
+Driver "1" o-- "1" FuenteAlimentacion
+class FuenteAlimentacion{
++EncenderArcade(señal)
++ApagarArcade(señal)
+}
+
+PiezaHardware "1" o-- "1" PersonajeJugable
+class PersonajeJugable{
++Mover(señal)
+}
+
+PersonajeJugable "1" o-- "1" GestorVida
+class GestorVida{
+-Vida:vidas[3]
++RestarVida()
++AumentarVida()
+}
+
+GestorVida "1" *-- "3" Vida
+PersonajeJugable "1" o-- "1" Direccion
+class Direccion{
+-Vector:vectores[2]
++DesplazarNorte()
++DesplazarSur()
++DesplazarEste()
++DesplazarOeste()
+}
+
+Direccion "1" *-- "2" Vector
+Vector "1" *-- "2" Coordenada
+class Vector{
+-Coordenada:x
+-Coordenada:y
+}
+
+PersonajeJugable <|-- Pacman
+Pacman "1" *-- "2" Estado
+class Pacman{
+-Estado:estado[2]
+}
+
+Estado <|-- Depredador
+Estado <|-- Presa
+Imagen <|-- Fantasma
+Imagen <|-- Pacman
+Estado "1" o-- "1" Temporizador
+class Temporizador{
++ContarTiempo()
+}
+
+PersonajeJugable "1" o-- "1" Laberinto
+class Laberinto{
+-Portal:portales[3]
++Viajar()
++Teletransportarse()
+}
+
+Laberinto "1" *-- "3" Portal
+Portal <|-- TunelWrap
+Portal <|-- CorralFantasmas
+
+@enduml
